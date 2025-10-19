@@ -1,15 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import debounce from 'lodash/debounce';
 import { IconSearch, IconX, IconDatabase, IconDatabaseOff } from '@tabler/icons';
+import StyledWrapper from './StyledWrapper';
 
 const SearchableEnvironmentList = ({ environments, activeEnvironmentUid, onSelect, onClear, dropdownTippyRef }) => {
   const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
 
   const debouncedSearch = useMemo(
     () =>
       debounce((value) => {
-        // This is where you would typically trigger a search if it were async
-        // For this local filter, we just rely on the state update
+        setDebouncedSearchText(value);
       }, 300),
     []
   );
@@ -22,20 +23,22 @@ const SearchableEnvironmentList = ({ environments, activeEnvironmentUid, onSelec
 
   const clearSearch = () => {
     setSearchText('');
+    setDebouncedSearchText('');
   };
 
   const filteredEnvironments = useMemo(() => {
-    if (!searchText) {
+    if (!debouncedSearchText) {
       return environments || [];
     }
     return (
       environments?.filter((env) =>
-        env.name.toLowerCase().includes(searchText.toLowerCase())
+        env.name.toLowerCase().includes(debouncedSearchText.toLowerCase())
       ) || []
     );
-  }, [environments, searchText]);
+  }, [environments, debouncedSearchText]);
 
   return (
+    <StyledWrapper>
     <div>
       <div className="relative px-2 py-1 search-input-container">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -52,6 +55,7 @@ const SearchableEnvironmentList = ({ environments, activeEnvironmentUid, onSelec
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
+          autoFocus="true"
           className="block w-full pl-7 pr-8 py-1 sm:text-sm border rounded"
           value={searchText}
           onChange={handleSearchChange}
@@ -87,7 +91,7 @@ const SearchableEnvironmentList = ({ environments, activeEnvironmentUid, onSelec
             </div>
           ))
         : searchText && (
-            <div className="dropdown-item disabled">
+            <div className="dropdown-item disabled" disabled>
               <span className="ml-2 text-gray-500">No environments found</span>
             </div>
           )}
@@ -105,6 +109,7 @@ const SearchableEnvironmentList = ({ environments, activeEnvironmentUid, onSelec
         </div>
       )}
     </div>
+    </StyledWrapper>
   );
 };
 

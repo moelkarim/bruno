@@ -43,11 +43,6 @@ const Wrapper = styled.div`
           }
         }
 
-        &.disabled {
-          cursor: not-allowed;
-          color: gray;
-        }
-
         .icon {
           color: ${(props) => props.theme.dropdown.iconColor};
         }
@@ -58,22 +53,11 @@ const Wrapper = styled.div`
 
         &:disabled {
           cursor: not-allowed;
-          color: gray;
+          color: ${(props) => props.theme.colors.text.muted};
         }
 
         &.border-top {
           border-top: solid 1px ${(props) => props.theme.dropdown.separator};
-        }
-      }
-
-      /* Search input styling */
-      .search-input-container input[type="text"] {
-        background-color: ${(props) => props.theme.dropdown.bg};
-        color: ${(props) => props.theme.dropdown.color};
-        border: 1px solid ${(props) => props.theme.dropdown.separator};
-        
-        &:focus {
-          outline: none;
         }
       }
     }
